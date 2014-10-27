@@ -46,7 +46,7 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 	private String type;
 	Client client;
 
-	private SentimentService sentimetService;
+	private SentimentService sentimentSv;
 
 	//
 	public void afterPropertiesSet() throws Exception {
@@ -127,7 +127,7 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 				for (SearchHit type : findUnFinishTwitterMsg) {
 					JSONObject tmp = new JSONObject(type.getSourceAsString());
 					String text = tmp.getString("text");
-					sentimetMap.put(type.getId(), sentimetService.getSentiment(text));
+					sentimetMap.put(type.getId(), getSentimentSv().getSentiment(text));
 				}
 				this.bulkUpdateTwitterSentiment(sentimetMap);
 				Thread.sleep(300);
@@ -137,12 +137,14 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 		}
 	}
 
-	public SentimentService getSentimetService() {
-		return sentimetService;
+	public SentimentService getSentimentSv() {
+		return sentimentSv;
 	}
 
-	public void setSentimetService(SentimentService sentimetService) {
-		this.sentimetService = sentimetService;
+	public void setSentimentSv(SentimentService sentimentSv) {
+		this.sentimentSv = sentimentSv;
 	}
+
+	
 
 }

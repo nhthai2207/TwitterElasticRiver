@@ -35,7 +35,7 @@
 	</bean>
 
 	<bean id="twitterElasticSearchRepository" class="nht.els.repository.impl.TwitterElasticSearchRepositoryImpl">
-		<property name="sentimentService" ref="sentimentService" />
+		<property name="sentimentSv" ref="sentimentService" />
 		
 	</bean>
      
