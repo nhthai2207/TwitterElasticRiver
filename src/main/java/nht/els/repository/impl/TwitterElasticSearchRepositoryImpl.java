@@ -45,8 +45,9 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 	@Value("${twiter.elasticsearch.cluster.type}")
 	private String type;
 	Client client;
-	
+
 	private SentimentService sentimetService;
+
 	//
 	public void afterPropertiesSet() throws Exception {
 		Settings setting = ImmutableSettings.settingsBuilder().put(Collections.singletonMap("cluster.name", clusterName)).build();
@@ -85,7 +86,7 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 		if (msgs != null) {
 			BulkRequestBuilder bulkRequest = client.prepareBulk();
 			for (String msg : msgs) {
-				
+
 				bulkRequest.add(client.prepareIndex(index, type).setSource(XContentFactory.jsonBuilder().startObject().field("msg", msg).field("sentiment", 0).field("finish", false).endObject()));
 
 			}
@@ -108,32 +109,31 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 		// searchBuilder.setQuery(queryBuilder).setFrom(0).setSize(size).execute().get().getHits().iterator();
 	}
 
-	
-
-	public void startPoint() {
-		long begin = System.currentTimeMillis();
-		/*TwitterElasticSearchRepositoryImpl repository = new TwitterElasticSearchRepositoryImpl();
-		repository.searchingHost = "ec2-54-191-180-182.us-west-2.compute.amazonaws.com";
-		repository.searchingPort = 9300;
-		repository.clusterName = "taih-cluster";
-		repository.index = "my_twitter_river";
-		repository.type = "status";*/
-		try {
-			this.afterPropertiesSet();
-			SearchHit[] findUnFinishTwitterMsg = this.findUnFinishTwitterMsg(10);
-			System.out.println(findUnFinishTwitterMsg.length);
-			Map<String, Float> sentimetMap = new HashMap<String, Float>();
-			for (SearchHit type : findUnFinishTwitterMsg) {
-				JSONObject tmp = new JSONObject(type.getSourceAsString());
-				String text = tmp.getString("text");				
-				sentimetMap.put(type.getId(), sentimetService.getSentiment(text));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+	public void startPoint() {		
+		/*
+		 * TwitterElasticSearchRepositoryImpl repository = new
+		 * TwitterElasticSearchRepositoryImpl(); repository.searchingHost =
+		 * "ec2-54-191-180-182.us-west-2.compute.amazonaws.com";
+		 * repository.searchingPort = 9300; repository.clusterName =
+		 * "taih-cluster"; repository.index = "my_twitter_river";
+		 * repository.type = "status";
+		 */
+		while (true) {
+			try {
+				this.afterPropertiesSet();
+				SearchHit[] findUnFinishTwitterMsg = this.findUnFinishTwitterMsg(1000);
+				System.out.println(findUnFinishTwitterMsg.length);
+				Map<String, Float> sentimetMap = new HashMap<String, Float>();
+				for (SearchHit type : findUnFinishTwitterMsg) {
+					JSONObject tmp = new JSONObject(type.getSourceAsString());
+					String text = tmp.getString("text");
+					sentimetMap.put(type.getId(), sentimetService.getSentiment(text));
+				}
+				Thread.sleep(30000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
-
-		System.out.println(System.currentTimeMillis() - begin);
-		
 	}
 
 	public SentimentService getSentimetService() {
