@@ -29,13 +29,13 @@
 	<context:component-scan base-package="nht.els.service" />
 
 
-	<bean id="sentimentService" class=" nht.els.service.imp.SentimentServiceImpl">
+	<bean id="sentimentService" class="nht.els.service.imp.SentimentServiceImpl">
 		<property name="sentislangResource" value="classpath:sentiment/sentislang.txt" />
 		<property name="sentislangWordsResource" value="classpath:sentiment/sentiwords.txt" />
 	</bean>
 
-	<bean id="twitterElasticSearchRepository" class=" nht.els.service.imp.TwitterElasticSearchRepositoryImpl">
-		<property name="sentimentService" value="sentimentService" />
+	<bean id="twitterElasticSearchRepository" class="nht.els.repository.impl.TwitterElasticSearchRepositoryImpl">
+		<property name="sentimentService" ref="sentimentService" />
 		
 	</bean>
      

@@ -129,7 +129,8 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 					String text = tmp.getString("text");
 					sentimetMap.put(type.getId(), sentimetService.getSentiment(text));
 				}
-				Thread.sleep(30000);
+				this.bulkUpdateTwitterSentiment(sentimetMap);
+				Thread.sleep(300);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
