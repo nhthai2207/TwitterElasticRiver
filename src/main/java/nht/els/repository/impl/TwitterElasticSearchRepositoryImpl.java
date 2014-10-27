@@ -71,8 +71,8 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 			BulkRequestBuilder bulkRequest = client.prepareBulk();
 			for(String id: objects.keySet()){
 				float sentiment =objects.get(id);
-				bulkRequest.add(client.prepareUpdate(index, type, id).setScript("ctx._source.sentiment=" + sentiment + ",ctx._source.finish=" + true));
-
+				bulkRequest.add(client.prepareUpdate(index, type, id).setScript("ctx._source.sentiment=\"" + sentiment + "\";ctx._source.finish=\"" + true+"\";"));
+				//.setScript("ctx._source.lastUpdate=\"" + lastUpdate + "\";ctx._source.level=\""+ memInfo.getLevel()+"\";")
 			}
 			BulkResponse bulkResponse = bulkRequest.execute().actionGet();
 			if (bulkResponse.hasFailures()) {
