@@ -63,6 +63,24 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 		client.prepareIndex(index, type).setSource(XContentFactory.jsonBuilder().startObject().field("msg", msg).field("sentiment", 0).field("finish", false).endObject()).execute().actionGet();
 	}
 
+	
+	public boolean bulkUpdateTwitterSentiment(Map<String,Float> objects) throws ElasticsearchException, IOException {
+		if (objects != null) {
+			
+			BulkRequestBuilder bulkRequest = client.prepareBulk();
+			for(String id: objects.keySet()){
+				float sentiment =objects.get(id);
+				bulkRequest.add(client.prepareUpdate(index, type, id).setScript("ctx._source.sentiment=" + sentiment + ",ctx._source.finish=" + true));
+
+			}
+			BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+			if (bulkResponse.hasFailures()) {
+				return false;
+			}
+			return true;
+		}
+		return true;
+	}
 	public boolean bulkTwitterSentiment(List<String> msgs) throws ElasticsearchException, IOException {
 		if (msgs != null) {
 			BulkRequestBuilder bulkRequest = client.prepareBulk();

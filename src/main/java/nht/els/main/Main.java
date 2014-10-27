@@ -1,7 +1,6 @@
 package nht.els.main;
 
-import nht.els.repository.TwitterElasticSearchRepository;
-import nht.els.service.SentimentService;
+import nht.els.service.TwitterSentimentService;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -15,9 +14,8 @@ public class Main {
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"springConfig.xml");
-		 SentimentService sentimentService = context.getBean(SentimentService.class);
-		 TwitterElasticSearchRepository twitterService = context.getBean(TwitterElasticSearchRepository.class);
-		 twitterService.startPoint();
+		 TwitterSentimentService twitterSentimentService = context.getBean(TwitterSentimentService.class);
+		 twitterSentimentService.updateUnFinishTwitter();
 		 //System.out.println(sentimentService.getSentiment("My life so is very wonderful"));
 		 
 	}

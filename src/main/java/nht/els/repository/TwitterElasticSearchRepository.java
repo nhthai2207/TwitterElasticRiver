@@ -2,6 +2,7 @@ package nht.els.repository;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.ElasticsearchException;
@@ -19,4 +20,7 @@ public interface TwitterElasticSearchRepository {
 	public SearchHit[] findUnFinishTwitterMsg(int size) throws InterruptedException, ExecutionException;
 	
 	public void startPoint();
+
+	boolean bulkUpdateTwitterSentiment(Map<String, Float> objects)
+			throws ElasticsearchException, IOException;
 }
