@@ -1,0 +1,136 @@
+
+
+
+
+ 	Leovin IT Services Leovin IT Services sent you a message about the job Logstash Elastisearch Kibana Consultant 
+
+right now we are already able to use logstash to receive tweets as input and output to elastisearch and query using kibana
+
+so you won't really have to use twitters depricated search api because the tweet-type events are already in logstash and you just have to create a custom filter plugin which should look like something like this right?
+
+    encoding: utf-8
+    Call this file 'set_sentiment_score.rb' (in logstash/filters, as above)
+
+
+require "logstash/filters/base"
+require "logstash/namespace"
+require 'rubygems'
+require 'json'
+require 'net/http'
+require 'uri'
+
+class LogStash::Filters::Set_sentiment_score < LogStash::Filters::Base
+
+  # Setting the config_name here is required. This is how you
+  # configure this filter from your logstash config.
+  #
+  # filter {
+  #   set_sentiment_score { ... }
+  # }
+  config_name "set_sentiment_score"
+
+  # New plugins should start life at milestone 1.
+  milestone 1
+
+  # Replace the message with this value.
+  config :value, :validate => :number
+
+  public
+  def register
+    # nothing to do
+  end # def register
+
+  public
+  def filter(event)
+
+  # load the word file (words -> sentiment score)
+  sentihash = load_senti_file ('sentiwords.txt')
+
+  # load the symbol file (smiles and ascii symbols -> sentiment score)  
+  sentihash.merge!(load_senti_file ('sentislang.txt'))
+  
+  # tokenize the text
+  tokens = text.split
+
+  # Check the sentiment value of each token against the sentihash.
+  # Since each word has a positive or negative numeric sentiment value
+  # we can just sum the values of all the sentimental words. If it is
+  # positive then we say the tweet is positive. If it is negative we 
+  # say the tweet is negative.
+  sentiment_total = 0.0
+
+  for token in tokens do
+
+    sentiment_value = sentihash[token]
+
+    if sentiment_value
+
+      # for debugging purposes
+      #puts "#{token} => #{sentiment_value}"
+
+      sentiment_total += sentiment_value
+
+    end
+
+    event["sentiment_score"] = sentiment_total
+
+  end # def filter
+
+end # class LogStash::Filters::Set_sentiment_score 
+
+
+
+
+
+
+
+
+
+here's our logstash config file
+
+input {
+  twitter {
+    consumer_key => "mtJ9X9ntUF9OfCOegtt7Urah5"
+    consumer_secret => "RgENcWWIT2rdH0PZA13Cu5n6Ude0Szzz1bxf5fiVZI1LfPkPoX"
+    oauth_token => "2814414806-LmaEiz6zS62wHCrun9WiQSpPrCM1Qc23F81lUWk"
+    oauth_token_secret => "Qt5FKO5lA8T0LPeWVB8u3thDRSsBzGXNagq69bOk0QjEc"
+    keywords => ["jcpenney, jc penney, jcpenny, jc penny"]
+    full_tweet => true
+  }
+}
+filter {
+  mutate {
+    add_field => [ "sentiment_score", 0 ]
+  }
+}
+output {
+  elasticsearch_http {
+    host => "localhost"
+    port => "9201"
+    index => "tweet"
+    index_type => "jcpenney"
+  }
+}
+
+curl -XPUT http://localhost:9200/_river/my_twitter_river/_meta -d '{
+    "type": "twitter",
+    "twitter": {
+        "oauth": {
+            "consumer_key": "VQyH6ROtP9IV5iuOP4qwGDOGE",
+            "consumer_secret": "TV3KoUh7JQRcjeukoERVSfFzpKNhTO1MiTtDDfb60BchIIk5gP",
+            "access_token": "2707713720-SEcUk9CoIHckrMEvMLy4dIQ1fRBU0UjzwugIWqK",
+            "access_token_secret": "AdLn683yaHVmOywxJAF89f5Ze7ExjDRhfPlEgS9M8OzcZ"
+        },
+        "filter": {
+            "tracks": "iphone6"
+        }
+    },
+    "index": {
+        "index": "my_twitter_river",
+        "type": "status",
+        "bulk_size": 100,
+        "flush_interval": "5s"
+    }
+}'
+
+http://ec2-54-191-180-182.us-west-2.compute.amazonaws.com:9200/_plugin/head/
