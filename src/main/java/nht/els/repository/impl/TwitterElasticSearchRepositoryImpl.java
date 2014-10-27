@@ -2,6 +2,7 @@ package nht.els.repository.impl;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +25,7 @@ import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermFilterBuilder;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
+import org.json.JSONObject;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -103,13 +104,11 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 			this.afterPropertiesSet();
 			SearchHit[] findUnFinishTwitterMsg = this.findUnFinishTwitterMsg(10);
 			System.out.println(findUnFinishTwitterMsg.length);
+			Map<String, Float> sentimetMap = new HashMap<String, Float>();
 			for (SearchHit type : findUnFinishTwitterMsg) {
-				System.out.println(type.getId() + "     " + type.getSourceAsString());
-				
-				Map<String, SearchHitField> fields = type.fields();
-				for (String field : fields.keySet()) {
-					System.out.println(field);
-				}
+				JSONObject tmp = new JSONObject(type.getSourceAsString());
+				String text = tmp.getString("text");				
+				sentimetMap.put(type.getId(), sentimetService.getSentiment(text));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

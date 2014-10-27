@@ -17,6 +17,7 @@ public class Main {
 				"springConfig.xml");
 		 SentimentService sentimentService = context.getBean(SentimentService.class);
 		 TwitterElasticSearchRepository twitterService = context.getBean(TwitterElasticSearchRepository.class);
+		 twitterService.startPoint();
 		 //System.out.println(sentimentService.getSentiment("My life so is very wonderful"));
 		 
 	}

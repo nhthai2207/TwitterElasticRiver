@@ -32,4 +32,9 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-grouping/4.8.1/lucene-grouping-4.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-spatial/4.8.1/lucene-spatial-4.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/spatial4j/spatial4j/0.4.1/spatial4j-0.4.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/json/json/20140107/json-20140107.jar" sourcepath="M2_REPO/org/json/json/20140107/json-20140107-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/sp/.m2/repository/org/json/json/20140107/json-20140107-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
 </classpath>
