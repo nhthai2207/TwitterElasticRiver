@@ -20,7 +20,7 @@
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="locations">
 			<list>
-				<value>classpath:config/common.properties</value>
+				<value>file:config/common.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -30,13 +30,10 @@
 
 
 	<bean id="sentimentService" class="nht.els.service.imp.SentimentServiceImpl">
-		<property name="sentislangResource" value="classpath:sentiment/sentislang.txt" />
-		<property name="sentislangWordsResource" value="classpath:sentiment/sentiwords.txt" />
+		<property name="sentislangResource" value="file:sentiment/sentislang.txt" />
+		<property name="sentislangWordsResource" value="file:sentiment/sentiwords.txt" />
 	</bean>
 
-	<bean id="twitterElasticSearchRepository" class="nht.els.repository.impl.TwitterElasticSearchRepositoryImpl">
-		<property name="sentimentSv" ref="sentimentService" />
-		
-	</bean>
+	
      
 </beans>

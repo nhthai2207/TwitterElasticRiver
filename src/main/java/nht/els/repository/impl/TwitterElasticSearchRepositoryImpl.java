@@ -46,7 +46,7 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 	private String type;
 	Client client;
 
-	private SentimentService sentimentSv;
+//	private SentimentService sentimentSv;
 
 	//
 	public void afterPropertiesSet() throws Exception {
@@ -109,41 +109,33 @@ public class TwitterElasticSearchRepositoryImpl implements TwitterElasticSearchR
 		// searchBuilder.setQuery(queryBuilder).setFrom(0).setSize(size).execute().get().getHits().iterator();
 	}
 
-	public void startPoint() {		
-		/*
-		 * TwitterElasticSearchRepositoryImpl repository = new
-		 * TwitterElasticSearchRepositoryImpl(); repository.searchingHost =
-		 * "ec2-54-191-180-182.us-west-2.compute.amazonaws.com";
-		 * repository.searchingPort = 9300; repository.clusterName =
-		 * "taih-cluster"; repository.index = "my_twitter_river";
-		 * repository.type = "status";
-		 */
-		while (true) {
-			try {
-				this.afterPropertiesSet();
-				SearchHit[] findUnFinishTwitterMsg = this.findUnFinishTwitterMsg(1000);
-				System.out.println(findUnFinishTwitterMsg.length);
-				Map<String, Float> sentimetMap = new HashMap<String, Float>();
-				for (SearchHit type : findUnFinishTwitterMsg) {
-					JSONObject tmp = new JSONObject(type.getSourceAsString());
-					String text = tmp.getString("text");
-					sentimetMap.put(type.getId(), getSentimentSv().getSentiment(text));
-				}
-				this.bulkUpdateTwitterSentiment(sentimetMap);
-				Thread.sleep(300);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-		}
-	}
-
-	public SentimentService getSentimentSv() {
-		return sentimentSv;
-	}
-
-	public void setSentimentSv(SentimentService sentimentSv) {
-		this.sentimentSv = sentimentSv;
-	}
+//	public void startPoint() {		
+//		/*
+//		 * TwitterElasticSearchRepositoryImpl repository = new
+//		 * TwitterElasticSearchRepositoryImpl(); repository.searchingHost =
+//		 * "ec2-54-191-180-182.us-west-2.compute.amazonaws.com";
+//		 * repository.searchingPort = 9300; repository.clusterName =
+//		 * "taih-cluster"; repository.index = "my_twitter_river";
+//		 * repository.type = "status";
+//		 */
+//		while (true) {
+//			try {
+//				this.afterPropertiesSet();
+//				SearchHit[] findUnFinishTwitterMsg = this.findUnFinishTwitterMsg(1000);
+//				System.out.println(findUnFinishTwitterMsg.length);
+//				Map<String, Float> sentimetMap = new HashMap<String, Float>();
+//				for (SearchHit type : findUnFinishTwitterMsg) {
+//					JSONObject tmp = new JSONObject(type.getSourceAsString());
+//					String text = tmp.getString("text");
+//					sentimetMap.put(type.getId(), getSentimentSv().getSentiment(text));
+//				}
+//				this.bulkUpdateTwitterSentiment(sentimetMap);
+//				Thread.sleep(300);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}			
+//		}
+//	}
 
 	
 

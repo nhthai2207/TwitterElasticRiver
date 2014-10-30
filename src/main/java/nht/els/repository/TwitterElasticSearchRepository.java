@@ -9,7 +9,6 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.search.SearchHit;
 
 public interface TwitterElasticSearchRepository {
-	public void afterPropertiesSet() throws Exception;
 
 	public void updateTwitterSentiment(String id, float sentiment);
 
@@ -19,7 +18,7 @@ public interface TwitterElasticSearchRepository {
 
 	public SearchHit[] findUnFinishTwitterMsg(int size) throws InterruptedException, ExecutionException;
 	
-	public void startPoint();
+	//public void startPoint();
 
 	boolean bulkUpdateTwitterSentiment(Map<String, Float> objects)
 			throws ElasticsearchException, IOException;
