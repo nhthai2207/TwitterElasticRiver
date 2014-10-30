@@ -30,8 +30,8 @@
 
 
 	<bean id="sentimentService" class="nht.els.service.imp.SentimentServiceImpl">
-		<property name="sentislangResource" value="file:sentiment/sentislang.txt" />
-		<property name="sentislangWordsResource" value="file:sentiment/sentiwords.txt" />
+		<property name="sentislangResource" value="file:config/sentiment/sentislang.txt" />
+		<property name="sentislangWordsResource" value="file:config/sentiment/sentiwords.txt" />
 	</bean>
 
 	

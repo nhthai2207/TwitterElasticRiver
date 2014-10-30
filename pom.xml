@@ -59,10 +59,10 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/</outputDirectory>
+              <outputDirectory>${project.build.directory}/config</outputDirectory>
               <resources>          
                 <resource>
-                  <directory>src/main/resources</directory>
+                  <directory>config</directory>
                   <filtering>true</filtering>
                 </resource>
               </resources>              
